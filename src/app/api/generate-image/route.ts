@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { NextResponse } from 'next/server';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -8,24 +9,35 @@ const openai = new OpenAI({
 export async function POST(req: Request, res: Response) {
   try {
     const { prompt } = await req.json();
-    console.log('This is the req.body' + prompt);
+    console.log('This is the req.body: ' + prompt);
 
     // Call DALL-E API
     const response = await openai.images.generate({
-      model: 'dall-e-3',
+      model: 'dall-e-2',
       prompt: prompt,
-      n: 1,
+      n: 4,
       size: '1024x1024',
+      response_format: 'b64_json',
     });
 
-    const imageUrl = response.data[0].url;
-    console.log('This is the imageUrl' + imageUrl);
-    // return imageUrl;
-    return Response.json({ imageUrl });
+    // Extracting all images
+    console.log('Raw Response:', response.data);
 
-    // Send the image URL back to the client
-    // res.status(200).json({ imageUrl });
+    const images = response.data.map((item: any) => {
+      return `data:image/png;base64,${item.b64_json}`;
+    });
+
+    console.log('Generated Image URLs:', images);
+
+    return NextResponse.json({
+      images,
+    });
+    // return Response.json({ imageJson });
   } catch (error) {
     console.error('Error calling DALL-E API:', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 },
+    );
   }
 }
