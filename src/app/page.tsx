@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { CardHeader, CardContent, Card } from '@/components/ui/card';
+import React from 'react';
 import {
   DialogTrigger,
   DialogFooter,
@@ -16,6 +17,7 @@ export default function Home() {
   const [prompt, setPrompt] = useState('');
   const [images, setImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const handlePromptChange = (event: any) => {
     setPrompt(event.target.value);
@@ -131,23 +133,24 @@ export default function Home() {
                       View Image
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
+                  <DialogContent className="max-w-[825px] ">
                     <Image
                       alt={`Generated Image ${index + 1}`}
                       className="aspect-square object-cover border border-gray-200 w-full rounded-lg overflow-hidden dark:border-gray-800"
-                      height="400"
+                      height="1000"
+                      width="1000"
                       src={base64Image}
-                      width="400"
                     />
                     <DialogFooter>
                       <Button
-                        className="bg-green-500 text-white rounded p-2"
+                        className="bg-green-500 text-white rounded p-2 hover:bg-sky-700 "
                         type="button"
+                        onClick={() => setShowConfirmModal(true)}
                       >
                         Accept
                       </Button>
                       <Button
-                        className="bg-red-500 text-white rounded p-2"
+                        className="bg-red-500 text-white rounded p-2 hover:bg-slate-700"
                         type="button"
                       >
                         Reject
@@ -155,6 +158,30 @@ export default function Home() {
                     </DialogFooter>
                   </DialogContent>
                 </Dialog>
+                {/* {showConfirmModal && (
+                  <div className="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                    <div className="bg-white p-8 rounded-xl">
+                      <p className="text-black">
+                        ⚠️ Confirm push to live event slideshow? This action is
+                        irreversible.
+                      </p>
+                      <div className="flex justify-end mt-4">
+                        <Button
+                          className="bg-green-500 text-white rounded p-2 mr-2 hover:bg-sky-700"
+                          // Add  confirm action here
+                        >
+                          Confirm
+                        </Button>
+                        <Button
+                          className="bg-gray-500 text-white rounded p-2 z-50 hover:bg-slate-700"
+                          onClick={() => setShowConfirmModal(false)} // Close modal
+                        >
+                          Back
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )} */}
               </CardContent>
             </Card>
           ))}

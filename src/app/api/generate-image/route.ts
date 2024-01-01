@@ -22,12 +22,13 @@ export async function POST(req: Request, res: Response) {
 
     // Extracting all images
     console.log('Raw Response:', response.data);
+    console.log(response.data[1]);
 
     const images = response.data.map((item: any) => {
       return `data:image/png;base64,${item.b64_json}`;
     });
 
-    console.log('Generated Image URLs:', images);
+    // console.log('Generated Image URLs:', images);
 
     return NextResponse.json({
       images,
